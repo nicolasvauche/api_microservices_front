@@ -29,6 +29,10 @@ function MyApp ({ Component, pageProps }) {
     router.push('/login')
   }
 
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true)
+  }
+
   return (
     <>
       <nav>
@@ -40,7 +44,7 @@ function MyApp ({ Component, pageProps }) {
           </a>
         )}
       </nav>
-      <Component {...pageProps} />
+      <Component {...pageProps} onLoginSuccess={handleLoginSuccess} />
     </>
   )
 }

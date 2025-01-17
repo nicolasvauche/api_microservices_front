@@ -1,18 +1,22 @@
-import { useState } from 'react'
-import { useRouter } from 'next/router'
 import axios from 'axios'
+import { useEffect, useState } from 'react'
+import { useRouter } from 'next/router'
 
-const Login = () => {
+const Login = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState(null)
   const router = useRouter()
 
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    if (token) {
+      router.push('/')
+    }
+  }, [])
+
   const handleLogin = async e => {
     e.preventDefault()
-
-    console.log('email:', email)
-    console.log('password:', password)
 
     try {
       const response = await axios.post('http://localhost:3001/auth/login', {
@@ -22,6 +26,11 @@ const Login = () => {
 
       const { token } = response.data
       localStorage.setItem('token', token)
+
+      if (onLoginSuccess) {
+        onLoginSuccess()
+      }
+
       router.push('/')
     } catch (err) {
       console.error('Erreur lors de la requête :', err)
