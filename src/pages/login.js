@@ -1,26 +1,42 @@
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import axios from 'axios'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [error, setError] = useState(null)
   const router = useRouter()
 
   const handleLogin = async e => {
     e.preventDefault()
 
-    // Exemple d'appel API pour l'authentification
-    if (email === 'test@example.com' && password === 'password') {
-      localStorage.setItem('token', 'dummy-token')
+    console.log('email:', email)
+    console.log('password:', password)
+
+    try {
+      const response = await axios.post('http://localhost:3002/auth/login', {
+        email,
+        password
+      })
+
+      const { token } = response.data
+      localStorage.setItem('token', token)
       router.push('/')
-    } else {
-      alert('Identifiants invalides')
+    } catch (err) {
+      console.error('Erreur lors de la requête :', err)
+      if (err.response) {
+        setError(err.response.data.message || 'Identifiants invalides')
+      } else {
+        setError('Erreur de connexion au serveur')
+      }
     }
   }
 
   return (
     <div style={{ padding: '2rem' }}>
       <h1>Login</h1>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <form onSubmit={handleLogin}>
         <div>
           <label>Email :</label>

@@ -5,7 +5,7 @@ const Home = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const router = useRouter()
 
-  /* useEffect(() => {
+  useEffect(() => {
     const token = localStorage.getItem('token')
     if (token) {
       setIsAuthenticated(true)
@@ -16,7 +16,7 @@ const Home = () => {
 
   if (!isAuthenticated) {
     return null
-  } */
+  }
 
   return (
     <div style={{ padding: '2rem' }}>

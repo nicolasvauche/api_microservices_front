@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 import '../styles/globals.css'
 
 function NavLink ({ href, children }) {
@@ -14,11 +15,30 @@ function NavLink ({ href, children }) {
 }
 
 function MyApp ({ Component, pageProps }) {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const router = useRouter()
+
+  useEffect(() => {
+    const token = localStorage.getItem('token')
+    setIsAuthenticated(!!token)
+  }, [])
+
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    setIsAuthenticated(false)
+    router.push('/login')
+  }
+
   return (
     <>
       <nav>
         <NavLink href='/'>Accueil</NavLink>
-        <NavLink href='/login'>Connexion</NavLink>
+        {!isAuthenticated && <NavLink href='/login'>Connexion</NavLink>}
+        {isAuthenticated && (
+          <a href='#' onClick={handleLogout}>
+            Déconnexion
+          </a>
+        )}
       </nav>
       <Component {...pageProps} />
     </>
